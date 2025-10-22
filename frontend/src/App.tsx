@@ -84,9 +84,6 @@ function App() {
 
         <div className="text-center text-sm text-gray-500">
           <p>
-            Frontend: Vite + React (Port 5173) | Backend: FastAPI (Port 8001)
-          </p>
-          <p className="mt-2">
             API docs:{' '}
             <a
               href={`${getBasePath()}/api/docs`}
