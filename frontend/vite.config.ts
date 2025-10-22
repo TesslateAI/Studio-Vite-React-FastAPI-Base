@@ -10,10 +10,16 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:8001',
+      // Match /api with or without base path prefix
+      '^(/preview/[^/]+)?/api': {
+        // In container, both frontend and backend are on the same host
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:8001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => {
+          // Remove both base path and /api prefix
+          // e.g., /preview/user5-project18/api/health -> /health
+          return path.replace(/^(\/preview\/[^/]+)?\/api/, '')
+        },
       },
     },
     hmr: {
