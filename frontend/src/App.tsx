@@ -6,10 +6,17 @@ function App() {
   const [items, setItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
+  // Get the base path from the HTML base tag or environment
+  const getBasePath = () => {
+    const base = document.querySelector('base')?.getAttribute('href') || import.meta.env.BASE_URL || '/'
+    return base.endsWith('/') ? base.slice(0, -1) : base
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/health')
+        const basePath = getBasePath()
+        const response = await fetch(`${basePath}/api/health`)
         const data = await response.json()
         setMessage(data.message)
         setLoading(false)
@@ -25,11 +32,13 @@ function App() {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch('/api/items')
+      const basePath = getBasePath()
+      const response = await fetch(`${basePath}/api/items`)
       const data = await response.json()
-      setItems(data.items)
+      setItems(data.items || [])
     } catch (error) {
       console.error('Failed to fetch items:', error)
+      setItems([])
     }
   }
 
